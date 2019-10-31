@@ -21,7 +21,8 @@ void floyd_warshall(int n)
         for(int u=1;u<=n;u++){
             for(int v=1;v<=n;v++){
                 if(dis[u][k]==INF || dis[k][v]==INF) continue;
-                dis[u][v]=min(dis[u][v],dis[u][k]+dis[k][v]);
+                int d=dis[u][k]+dis[k][v];
+                if(d<dis[u][v]) dis[u][v]=d,path[u][v]=path[u][k];
             }
         }
     }

@@ -4,7 +4,7 @@ using namespace std;
 const int INF=INT_MAX;
 const int MX=102;
 
-int dis[MX][MX];
+int dis[MX][MX],path[MX][MX];
 
 void init(int n)
 {

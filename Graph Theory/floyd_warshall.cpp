@@ -31,12 +31,7 @@ void floyd_warshall(int n)
 bool negative_cycle(int n)
 {
     for(int u=1;u<=n;u++){
-        for(int v=1;v<=n;v++){
-            for(int k=1;k<=n;k++){
-                if(dis[u][k]==INF || dis[k][v]==INF) continue;
-                if(dis[k][k]<0) return true;
-            }
-        }
+        if(dis[u][u]<0) return true;
     }
     return false;
 }

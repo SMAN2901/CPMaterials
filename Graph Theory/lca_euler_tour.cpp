@@ -1,9 +1,11 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+typedef pair <int,int> pii;
+
 const int MX=1003;
 
-int bit[3][MX<<1];
+pii sp[MX<<1][12];
 int dis[MX],pos[MX],euler[MX<<1];
 vector <int> adj[MX];
 
@@ -29,58 +31,31 @@ int f(int u,int p,int k)
     return k;
 }
 
-int mini(int x,int y)
+void build(int n)
 {
-    if(x==-1) return y;
-    if(y==-1) return x;
-    return (dis[x]<dis[y])?x:y;
-}
-
-void build(int i,int v,int n)
-{
-    int j=i;
-    bit[2][i]=v;
-    while(i<=n){
-        bit[0][i]=mini(bit[0][i],v);
-        i+=i & -i;
-    }
-    while(j>0){
-        bit[1][j]=mini(bit[1][j],v);
-        j-=j & -j;
-    }
-}
-
-int query(int i,int j)
-{
-    int p=i,q=j,r,m=-1;
-    while(p<=j){
-        r=p+(p & -p);
-        if(r<=j) m=mini(m,bit[1][p]);
-        p=r;
-    }
-    while(q>=i){
-        r=q-(q & -q);
-        if(r>=i) m=mini(m,bit[0][q]);
-        else m=mini(m,bit[2][q]);
-        q=r;
-    }
-    return m;
-}
-
-void construct_bit(int n)
-{
-    memset(bit,-1,sizeof(bit));
     for(int i=0;i<n;i++){
-        int x=euler[i];
-        build(i+1,x,n);
+        int u=euler[i];
+        sp[i][0]={dis[u],u};
     }
+    for(int j=1;(1<<j)<=n;j++){
+        for(int i=0;i<n;i++){
+            if(i+(1<<j)>n) continue;
+            sp[i][j]=min(sp[i][j-1],sp[i+(1<<(j-1))][j-1]);
+        }
+    }
+}
+
+pii query(int i,int j)
+{
+    int k=__lg(j-i+1);
+    return min(sp[i][k],sp[j-(1<<k)+1][k]);
 }
 
 int lca(int u,int v)
 {
     int x=pos[u],y=pos[v];
     if(x>y) swap(x,y);
-    return query(x+1,y+1);
+    return query(x,y).second;
 }
 
 int main()
